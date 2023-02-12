@@ -12,96 +12,128 @@ let contenedorEleccionUsuario = document.querySelector("#eleccion-usuario");
 let contenedorEleccionPC = document.querySelector("#eleccion-computadora");
 
 let botonesArmas = document.querySelectorAll(".arma");
-botonesArmas.forEach(boton => {
-    boton.addEventListener("click", iniciarTurno);
+
+botonesArmas.forEach((boton) => {
+  boton.addEventListener("click", iniciarTurno);
 });
 
+const getRandomNumber = (max) => Math.floor(Math.random() * max);
+
 function iniciarTurno(e) {
-    
-    let eleccionPC = Math.floor(Math.random() * 3);
-    let eleccionUsuario = e.currentTarget.id;
+  let eleccionPC = getRandomNumber(3);
+  let eleccionUsuario = e.currentTarget.id;
 
-    // piedra => 0
-    // papel => 1
-    // tijera => 2
+  // piedra => 0
+  // papel => 1
+  // tijera => 2
 
-    if (eleccionPC === 0) {
-        eleccionPC = "malphite";
-    } else if (eleccionPC === 1) {
-        eleccionPC = "teemo"
-    } else if (eleccionPC === 2) {
-        eleccionPC = "gwen"
+  if (eleccionPC === 0) {
+    eleccionPC = "malphite";
+  } else if (eleccionPC === 1) {
+    eleccionPC = "teemo";
+  } else if (eleccionPC === 2) {
+    eleccionPC = "gwen";
+  }
+
+  // piedra vence a tijera
+  // tijera vence a papel
+  // papel vence a piedra
+  // si son iguales es empate
+
+  if (
+    (eleccionUsuario === "malphite" && eleccionPC === "gwen") ||
+    (eleccionUsuario === "gwen" && eleccionPC === "teemo") ||
+    (eleccionUsuario === "teemo" && eleccionPC === "malphite")
+  ) {
+    ganaUsuario();
+  } else if (
+    (eleccionPC === "malphite" && eleccionUsuario === "gwen") ||
+    (eleccionPC === "gwen" && eleccionUsuario === "teemo") ||
+    (eleccionPC === "teemo" && eleccionUsuario === "malphite")
+  ) {
+    ganaPC();
+  } else {
+    empate();
+  }
+
+  mensaje.classList.remove("disabled");
+  contenedorEleccionUsuario.innerText = eleccionUsuario;
+  contenedorEleccionPC.innerText = eleccionPC;
+
+  if (puntosUsuario === 5 || puntosPC === 5) {
+    if (puntosUsuario === 5) {
+      instrucciones.innerText = "Ganaste y ni sabes como, anda paya bobo";
     }
 
-    // piedra vence a tijera
-    // tijera vence a papel
-    // papel vence a piedra
-    // si son iguales es empate
-
-    if (
-        (eleccionUsuario === "malphite" && eleccionPC === "gwen") ||
-        (eleccionUsuario === "gwen" && eleccionPC === "teemo") ||
-        (eleccionUsuario === "teemo" && eleccionPC === "malphite")
-    ) {
-        ganaUsuario();
-    } else if (
-        (eleccionPC === "malphite" && eleccionUsuario === "gwen") ||
-        (eleccionPC === "gwen" && eleccionUsuario === "teemo") ||
-        (eleccionPC === "teemo" && eleccionUsuario === "malphite")
-    ) {
-        ganaPC();
-    } else {
-        empate();
+    if (puntosPC === 5) {
+      instrucciones.innerText = "Perdiste una partida contra Bots larva";
     }
 
-    mensaje.classList.remove("disabled");
-    contenedorEleccionUsuario.innerText = eleccionUsuario;
-    contenedorEleccionPC.innerText = eleccionPC;
-
-    if (puntosUsuario === 5 || puntosPC === 5) {
-
-        if (puntosUsuario === 5) {
-            instrucciones.innerText = "Ganaste y ni sabes como, anda paya bobo"
-        }
-
-        if (puntosPC === 5) {
-            instrucciones.innerText = "Perdiste una partida contra Bots larva"
-        }
-
-        elegiTuArma.classList.add("disabled");
-        reiniciar.classList.remove("disabled");
-        reiniciar.addEventListener("click", reiniciarJuego);
-    }
-
-
+    elegiTuArma.classList.add("disabled");
+    reiniciar.classList.remove("disabled");
+    reiniciar.addEventListener("click", reiniciarJuego);
+  }
 }
 
 function ganaUsuario() {
-    puntosUsuario++;
-    contenedorPuntosUsuario.innerText = puntosUsuario;
-    contenedorGanaPunto.innerText = "Fue Puro KS - GANASTE"
+  puntosUsuario++;
+  contenedorPuntosUsuario.innerText = puntosUsuario;
+  contenedorGanaPunto.innerText = "Fue Puro KS - GANASTE";
 }
 
 function ganaPC() {
-    puntosPC++;
-    contenedorPuntosPC.innerText = puntosPC;
-    contenedorGanaPunto.innerText = "Te Gankearon Papu - PERDISTE"
+  puntosPC++;
+  contenedorPuntosPC.innerText = puntosPC;
+  contenedorGanaPunto.innerText = "Te Gankearon Papu - PERDISTE";
 }
 
 function empate() {
-    contenedorGanaPunto.innerText = "Diveaste, Moriste Pero Mataste - EMPATE"
+  contenedorGanaPunto.innerText = "Diveaste, Moriste Pero Mataste - EMPATE";
 }
 
 function reiniciarJuego() {
-    reiniciar.classList.add("disabled");
-    elegiTuArma.classList.remove("disabled");
-    mensaje.classList.add("disabled");
+  reiniciar.classList.add("disabled");
+  elegiTuArma.classList.remove("disabled");
+  mensaje.classList.add("disabled");
 
-    puntosUsuario = 0;
-    puntosPC = 0;
-    
-    contenedorPuntosUsuario.innerText = puntosUsuario;
-    contenedorPuntosPC.innerText = puntosPC;
+  puntosUsuario = 0;
+  puntosPC = 0;
 
-    instrucciones.innerText = "El primero en llegar a 5 puntos gana."
+  contenedorPuntosUsuario.innerText = puntosUsuario;
+  contenedorPuntosPC.innerText = puntosPC;
+
+  instrucciones.innerText = "El primero en llegar a 5 puntos gana.";
 }
+
+const ELECCIONES = {
+  MALPHITE: "malphite",
+  TEEMO: "teemo",
+  GWEN: "gwen",
+};
+
+const CONDICION_VICTORIA = {
+  [ELECCIONES.MALPHITE]: {
+    [ELECCIONES.GWEN]: true,
+  },
+  [ELECCIONES.GWEN]: {
+    [ELECCIONES.TEEMO]: true,
+  },
+  [ELECCIONES.TEEMO]: {
+    [ELECCIONES.MALPHITE]: true,
+  },
+};
+
+const quienGana = (eleccionUsuario, eleccionPC) => {
+  if (CONDICION_VICTORIA[eleccionUsuario] === eleccionPC) return "empate";
+  if (CONDICION_VICTORIA[eleccionUsuario][eleccionPC]) return "ganaste";
+  return "perdiste";
+};
+
+const resultado = quienGana(ELECCIONES.MALPHITE, ELECCIONES.GWEN);
+console.log(resultado);
+
+const primos = ["nico", "enzo", "marcos"];
+
+primos.forEach((primo) => {
+  console.log(primo);
+});
