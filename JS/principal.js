@@ -137,3 +137,30 @@ const primos = ["nico", "enzo", "marcos"];
 primos.forEach((primo) => {
   console.log(primo);
 });
+
+const url_pokemones = "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0";
+
+const obtenerPokemones = async () => {
+  const res = await fetch(url_pokemones);
+  const data = await res.json();
+  const pokemons = data.results;
+  return pokemons;
+};
+
+const obtenerPokemonPorNombre = async (nombre) => {
+  const res = await fetch("https://pokeapi.co/api/v2/pokemon/" + nombre);
+  const data = await res.json();
+
+  const divImgPokmn = document.querySelector("#img-pokemon");
+  creteImgElement(data.sprites.front_default, divImgPokmn);
+
+  return data;
+};
+
+const creteImgElement = (src, el) => {
+  const img = document.createElement("img");
+  img.src = src;
+  el.appendChild(img);
+};
+
+console.log(obtenerPokemonPorNombre("charmander"));
